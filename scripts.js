@@ -23,8 +23,10 @@ function handleClick(e) {
       mode = "color";
       break;
     case "2":
-      mode = "draw"
+      mode = "greys"
       break;
+    case "3":
+      mode = "darken"
   }
   isNaN(size) ? generateGrid() : generateGrid(parseInt(size));
 }
@@ -58,19 +60,38 @@ function generateListeners() {
 }
 
 function generateColor() {
-  let hue = Math.floor(Math.random()*360);
-  let sat = Math.floor(Math.random()*101);
-  let ltn = Math.floor(Math.random()*81);
-  return `hsla(${hue}, ${sat}%, ${ltn}%, 1)`
+  let r = Math.floor(Math.random()*256);
+  let g = Math.floor(Math.random()*256);
+  let b = Math.floor(Math.random()*256);
+  return `rgb(${r}, ${g}, ${b})`
 }
 
-function getNewColor(oldColor) {
-  if (!oldColor) return 'rgb(225, 225, 225)';
-  if (oldColor === 'rgb(0, 0, 0)') return oldColor;
-  const oldNum = oldColor.split(', ')[1];
+function getNewShade(oldShade) {
+  if (!oldShade) return 'rgb(225, 225, 225)';
+  if (oldShade === 'rgb(0, 0, 0)') return oldShade;
+  const oldNum = oldShade.split(', ')[1];
   const newNum = oldNum - 25;
   return `rgb(${newNum}, ${newNum}, ${newNum})`
 }
+
+function getNewColor(cube) {
+  let oldColor = cube.style.backgroundColor;
+  if (oldColor === 'rgb(0, 0, 0)') return oldColor;
+  if (!oldColor) {
+    const color = generateColor();
+    const arr = color.split(', ');
+    cube.dataset.r = arr[0].slice(4) / 10;
+    cube.dataset.g = arr[1] / 10;
+    cube.dataset.b = arr[2].slice(0, -1) / 10;
+    return color;
+  }
+  const arr = oldColor.split(', ');
+  const r = arr[0].slice(4) - cube.dataset.r;
+  const g = arr[1] - cube.dataset.g;
+  const b = arr[2].slice(0, -1) - cube.dataset.b;
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
 
 function handleMouseEnter(e) {
   if (!write) return;
@@ -81,11 +102,14 @@ function handleMouseEnter(e) {
     case "color":
       e.target.style.backgroundColor = generateColor();
       break;
-    case "draw":
-      let newColor = getNewColor(e.target.style.backgroundColor);
-      e.target.style.backgroundColor = newColor;
+    case "greys":
+      let newShade = getNewShade(e.target.style.backgroundColor);
+      e.target.style.backgroundColor = newShade;
       break;
+    case "darken":
+      let newColor = getNewColor(e.target);
+      e.target.style.backgroundColor = newColor;
   }
 }
 
-generateGrid(8);
+generateGrid(16);
