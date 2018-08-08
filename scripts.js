@@ -92,7 +92,6 @@ function getNewColor(cube) {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
-
 function handleMouseEnter(e) {
   if (!write) return;
   switch (mode) {
