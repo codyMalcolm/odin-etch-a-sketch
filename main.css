@@ -28,7 +28,7 @@ body {
 
 .cube {
   border: 1px solid hsla(0, 100%, 0%, .20);
-  background-color: yellow;
+  background-color: hsla(0, 100%, 100%, 1);
   width: 100%;
   height: 100%;
 }
